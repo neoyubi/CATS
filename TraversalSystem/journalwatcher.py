@@ -74,3 +74,7 @@ class JournalWatcher:
     def get_jumped(self) -> bool:
         self.process_journal(self.lastUsedFileName)
         return self.hasJumped
+
+    def get_fuel_level(self) -> int:
+        self.process_journal(self.lastUsedFileName)
+        return self.lastFuel

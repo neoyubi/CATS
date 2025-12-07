@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using MultiCarrierManager.Controls;
 
@@ -7,6 +8,9 @@ namespace MultiCarrierManager.CATS
 {
     public class CatSitter
     {
+        [DllImport("user32.dll")]
+        private static extern bool AllowSetForegroundWindow(int dwProcessId);
+
         private TextBox output;
         private CATSForm form;
         private Process process;
@@ -148,6 +152,7 @@ namespace MultiCarrierManager.CATS
                 }
             });
             process.Start();
+            AllowSetForegroundWindow(process.Id);
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
             Program.logger.LogOutput("Traversal System script started");
