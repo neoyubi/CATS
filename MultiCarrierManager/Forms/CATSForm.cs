@@ -16,8 +16,25 @@ namespace MultiCarrierManager
         public CATSForm()
         {
             InitializeComponent();
+            DarkTheme.ApplyTheme(this);
+            ApplyCustomStyles();
             this.Shown += new System.EventHandler(this.CATSForm_Shown);
             this.Closed += new System.EventHandler(this.CATSForm_Closed);
+        }
+
+        private void ApplyCustomStyles()
+        {
+            DarkTheme.StylePrimaryButton(runButton);
+            DarkTheme.StyleDangerButton(stopButton);
+
+            // Ensure all regular buttons have proper text contrast
+            DarkTheme.StyleButton(button2);      // Get route automatically
+            DarkTheme.StyleButton(button3);      // Open Admin Panel
+            DarkTheme.StyleButton(loadButton);   // Load Route
+            DarkTheme.StyleButton(importButton); // Import from Spansh CSV
+            DarkTheme.StyleButton(OptionsButton);
+            DarkTheme.StyleButton(button4);      // About/Support
+            DarkTheme.StyleButton(button5);      // Discord integration
         }
 
         private void CATSForm_Shown(object sender, EventArgs e)
