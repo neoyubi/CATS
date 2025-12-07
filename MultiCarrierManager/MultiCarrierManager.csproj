@@ -167,6 +167,7 @@
     <Compile Include="Forms\SpanshRouteForm.Designer.cs">
       <DependentUpon>SpanshRouteForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="DarkTheme.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
