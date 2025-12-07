@@ -20,6 +20,7 @@ namespace MultiCarrierManager
         private Timer watchTimer;
         private bool isMonitoring;
         private bool isPaused;
+        private bool hadFocusOnce;
         private string lastState;
         private NotifyIcon notifyIcon;
         private Form parentForm;
@@ -49,6 +50,7 @@ namespace MultiCarrierManager
             lastState = currentState;
             isMonitoring = true;
             isPaused = false;
+            hadFocusOnce = IsEliteFocused();
             watchTimer.Start();
         }
 
@@ -81,7 +83,12 @@ namespace MultiCarrierManager
 
             bool eliteFocused = IsEliteFocused();
 
-            if (!isPaused && !eliteFocused)
+            if (eliteFocused)
+            {
+                hadFocusOnce = true;
+            }
+
+            if (!isPaused && !eliteFocused && hadFocusOnce)
             {
                 isPaused = true;
                 OnFocusLost();
