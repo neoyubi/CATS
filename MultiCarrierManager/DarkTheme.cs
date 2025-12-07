@@ -17,11 +17,88 @@ namespace MultiCarrierManager
         public static readonly Color SuccessGreen = Color.FromArgb(78, 154, 6);
         public static readonly Color ErrorRed = Color.FromArgb(204, 0, 0);
 
+        public static bool IsEnabled => Program.settings?.DarkMode ?? true;
+
         public static void ApplyTheme(Form form)
         {
+            if (!IsEnabled)
+            {
+                ResetToDefault(form);
+                return;
+            }
             form.BackColor = BackgroundDark;
             form.ForeColor = TextPrimary;
             ApplyThemeToControls(form.Controls);
+        }
+
+        public static void ResetToDefault(Form form)
+        {
+            form.BackColor = SystemColors.Control;
+            form.ForeColor = SystemColors.ControlText;
+            ResetControlsToDefault(form.Controls);
+        }
+
+        private static void ResetControlsToDefault(Control.ControlCollection controls)
+        {
+            foreach (Control control in controls)
+            {
+                ResetControlToDefault(control);
+                if (control.HasChildren)
+                {
+                    ResetControlsToDefault(control.Controls);
+                }
+            }
+        }
+
+        private static void ResetControlToDefault(Control control)
+        {
+            control.ForeColor = SystemColors.ControlText;
+
+            switch (control)
+            {
+                case Button button:
+                    button.FlatStyle = FlatStyle.Standard;
+                    button.BackColor = SystemColors.Control;
+                    button.ForeColor = SystemColors.ControlText;
+                    button.UseVisualStyleBackColor = true;
+                    break;
+                case TextBox textBox:
+                    textBox.BackColor = SystemColors.Window;
+                    textBox.ForeColor = SystemColors.WindowText;
+                    textBox.BorderStyle = BorderStyle.Fixed3D;
+                    break;
+                case ComboBox comboBox:
+                    comboBox.BackColor = SystemColors.Window;
+                    comboBox.ForeColor = SystemColors.WindowText;
+                    comboBox.FlatStyle = FlatStyle.Standard;
+                    break;
+                case Label label:
+                    label.ForeColor = SystemColors.ControlText;
+                    label.BackColor = Color.Transparent;
+                    break;
+                case ListView listView:
+                    listView.BackColor = SystemColors.Window;
+                    listView.ForeColor = SystemColors.WindowText;
+                    break;
+                case CheckBox checkBox:
+                    checkBox.ForeColor = SystemColors.ControlText;
+                    checkBox.BackColor = Color.Transparent;
+                    break;
+                case RadioButton radioButton:
+                    radioButton.ForeColor = SystemColors.ControlText;
+                    radioButton.BackColor = Color.Transparent;
+                    break;
+                case GroupBox groupBox:
+                    groupBox.BackColor = SystemColors.Control;
+                    groupBox.ForeColor = SystemColors.ControlText;
+                    break;
+                case Panel panel:
+                    panel.BackColor = SystemColors.Control;
+                    break;
+                default:
+                    control.BackColor = SystemColors.Control;
+                    break;
+            }
         }
 
         private static void ApplyThemeToControls(Control.ControlCollection controls)
@@ -92,7 +169,33 @@ namespace MultiCarrierManager
             button.BackColor = BackgroundMedium;
             button.ForeColor = TextPrimary;
             button.Cursor = Cursors.Hand;
-            button.Font = new Font(button.Font.FontFamily, button.Font.Size, FontStyle.Regular);
+
+            button.Paint -= Button_Paint;
+            button.Paint += Button_Paint;
+        }
+
+        private static void Button_Paint(object sender, PaintEventArgs e)
+        {
+            Button btn = (Button)sender;
+
+            Color bgColor = btn.BackColor;
+            Color textColor = btn.Enabled ? btn.ForeColor : TextSecondary;
+
+            e.Graphics.Clear(bgColor);
+
+            using (Pen borderPen = new Pen(btn.FlatAppearance.BorderColor, btn.FlatAppearance.BorderSize))
+            {
+                e.Graphics.DrawRectangle(borderPen, 0, 0, btn.Width - 1, btn.Height - 1);
+            }
+
+            TextRenderer.DrawText(
+                e.Graphics,
+                btn.Text,
+                btn.Font,
+                btn.ClientRectangle,
+                textColor,
+                TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter
+            );
         }
 
         public static void StylePrimaryButton(Button button)

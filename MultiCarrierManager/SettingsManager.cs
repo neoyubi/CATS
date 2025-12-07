@@ -1,5 +1,4 @@
 using System;
-using System.Drawing.Drawing2D;
 using System.IO;
 
 namespace MultiCarrierManager
@@ -14,13 +13,18 @@ namespace MultiCarrierManager
         public bool GetTritium { get; private set; }
         public bool DisableRefuel { get; private set; }
         public bool PowerSaving { get; private set; }
-        public int RefuelMode { get; private set; } // 0: Regular, 1: Bug fix for > 8 items, 2: Squadron
+        public int RefuelMode { get; private set; }
         public bool SingleDiscordMessage { get; private set; }
+        public bool DarkMode { get; private set; }
+        public bool PreJumpAlert { get; private set; }
 
         public SettingsManager(string file)
         {
             FileName = file;
             IniFile = File.ReadAllLines(file);
+
+            DarkMode = true;
+            PreJumpAlert = true;
 
             foreach (string line in IniFile)
             {
@@ -44,13 +48,21 @@ namespace MultiCarrierManager
                 {
                     PowerSaving = Convert.ToBoolean(line.Split('=')[1]);
                 }
-                else if  (line.StartsWith("squadron-carrier"))
+                else if (line.StartsWith("squadron-carrier"))
                 {
                     RefuelMode = Convert.ToInt32(line.Split('=')[1]);
                 }
-                else  if (line.StartsWith("single-discord-message"))
+                else if (line.StartsWith("single-discord-message"))
                 {
                     SingleDiscordMessage = Convert.ToBoolean(line.Split('=')[1]);
+                }
+                else if (line.StartsWith("dark-mode"))
+                {
+                    DarkMode = Convert.ToBoolean(line.Split('=')[1]);
+                }
+                else if (line.StartsWith("pre-jump-alert"))
+                {
+                    PreJumpAlert = Convert.ToBoolean(line.Split('=')[1]);
                 }
             }
         }
@@ -129,6 +141,18 @@ namespace MultiCarrierManager
         {
             SingleDiscordMessage = b;
             ReplaceInArray("single-discord-message", b);
+        }
+
+        public void SetDarkMode(bool b)
+        {
+            DarkMode = b;
+            ReplaceInArray("dark-mode", b);
+        }
+
+        public void SetPreJumpAlert(bool b)
+        {
+            PreJumpAlert = b;
+            ReplaceInArray("pre-jump-alert", b);
         }
     }
 }
