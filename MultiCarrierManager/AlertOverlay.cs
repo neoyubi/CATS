@@ -112,16 +112,23 @@ namespace MultiCarrierManager
             Invalidate();
         }
 
+        private bool isDismissing = false;
+
         private void Dismiss()
         {
-            if (!fadingIn)
+            if (isDismissing)
             {
-                Close();
                 return;
             }
+            isDismissing = true;
+
+            countdownTimer.Stop();
+            pulseTimer.Stop();
+
+            onDismiss?.Invoke();
+
             fadingIn = false;
             fadeTimer.Start();
-            onDismiss?.Invoke();
         }
 
         protected override void OnPaint(PaintEventArgs e)

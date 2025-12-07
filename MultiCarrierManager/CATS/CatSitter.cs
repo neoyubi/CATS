@@ -12,7 +12,6 @@ namespace MultiCarrierManager.CATS
         private Process process;
         private Label countdownLabel;
         private Label etaLabel;
-        private bool preJumpAlertShown;
         private NotifyIcon notifyIcon;
         private FocusWatchdog focusWatchdog;
         private string currentState;
@@ -104,6 +103,7 @@ namespace MultiCarrierManager.CATS
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.RedirectStandardError = true;
+            process.StartInfo.RedirectStandardInput = true;
             process.StartInfo.CreateNoWindow = true;
             // Monitor the process for exit
             process.EnableRaisingEvents = true;
@@ -168,17 +168,12 @@ namespace MultiCarrierManager.CATS
             if (int.TryParse(line, out int remaining))
             {
                 countdownLabel.Text = "Current jump: " + TimeSpan.FromSeconds(remaining).ToString(@"hh\:mm\:ss");
+                return;
+            }
 
-                if (Program.settings.PreJumpAlert && remaining == 15 && !preJumpAlertShown)
-                {
-                    preJumpAlertShown = true;
-                    ShowPreJumpAlert();
-                }
-                else if (remaining > 15)
-                {
-                    preJumpAlertShown = false;
-                }
-
+            if (line.StartsWith("interaction:"))
+            {
+                HandleInteractionRequest(line);
                 return;
             }
 
@@ -224,6 +219,7 @@ namespace MultiCarrierManager.CATS
                         StartFocusMonitoring();
                         break;
                     case "Tritium successfully refuelled":
+                    case "Refuel process completed.":
                         form.Text = $"CATS | En route to {finalSystem} | Next stop: {nextSystem} | Cooling down...";
                         form.UpdateStatusIndicator(StatusIndicator.StatusState.CoolingDown);
                         SetNavigationState("Cooling down", false);
@@ -239,8 +235,8 @@ namespace MultiCarrierManager.CATS
                         etaLabel.Text = line;
                         break;
                     case string s when s.StartsWith("alert:"):
-                        string alert = line.Split(':')[1];
-                        MessageBox.Show(alert, "Alert", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        string alertMessage = line.Substring(6);
+                        ShowNonBlockingAlert(alertMessage);
                         break;
                 }
             }
@@ -250,17 +246,76 @@ namespace MultiCarrierManager.CATS
             }
         }
 
-        private void ShowPreJumpAlert()
+        private void HandleInteractionRequest(string line)
         {
+            string[] parts = line.Split(':');
+            string interactionType = parts.Length > 1 ? parts[1] : "unknown";
+            string target = parts.Length > 2 ? parts[2] : "";
+
+            output.AppendText($"Preparing for {interactionType}..." + Environment.NewLine);
+            Program.logger.LogCats($"InteractionRequest:{interactionType}:{target}");
+
+            if (!Program.settings.PreInteractionAlert)
+            {
+                SendProceedSignal();
+                return;
+            }
+
+            string title = interactionType == "plotting" ? "PLOTTING IMMINENT" : "REFUELING IMMINENT";
+            string message = interactionType == "plotting"
+                ? $"CATS will begin plotting jump to {target}.\nEnsure Elite Dangerous is ready."
+                : "CATS will begin refueling sequence.\nEnsure Elite Dangerous is ready.";
+
             FlashWindow.Flash(form);
             System.Media.SystemSounds.Exclamation.Play();
 
             form.Invoke(new Action(() =>
             {
                 AlertOverlay overlay = new AlertOverlay(
-                    "NAVIGATION IMMINENT",
-                    $"Carrier jump to {nextSystem} will be plotted in 15 seconds.\nPlease do not navigate away during processing.",
-                    5
+                    title,
+                    message,
+                    5,
+                    () => SendProceedSignal()
+                );
+                overlay.ShowAlert();
+            }));
+        }
+
+        private void SendProceedSignal()
+        {
+            try
+            {
+                if (process != null && !process.HasExited)
+                {
+                    process.StandardInput.WriteLine("proceed");
+                    process.StandardInput.Flush();
+                    Program.logger.LogCats("Sent proceed signal to TraversalSystem");
+                }
+            }
+            catch (Exception ex)
+            {
+                Program.logger.Log($"Error sending proceed signal: {ex.Message}");
+            }
+        }
+
+        private void ShowNonBlockingAlert(string message)
+        {
+            output.AppendText($"WARNING: {message}" + Environment.NewLine);
+            Program.logger.LogCats($"Alert:{message}");
+
+            FlashWindow.Flash(form);
+            System.Media.SystemSounds.Exclamation.Play();
+
+            notifyIcon.Visible = true;
+            notifyIcon.BalloonTipText = message;
+            notifyIcon.ShowBalloonTip(10000);
+
+            form.Invoke(new Action(() =>
+            {
+                AlertOverlay overlay = new AlertOverlay(
+                    "WARNING",
+                    message,
+                    120
                 );
                 overlay.ShowAlert();
             }));
@@ -280,18 +335,5 @@ namespace MultiCarrierManager.CATS
             catch (Exception) { }
         }
 
-        public void TestPreJumpAlert()
-        {
-            nextSystem = "Sagittarius A*";
-            Timer delayTimer = new Timer();
-            delayTimer.Interval = 3000;
-            delayTimer.Tick += (s, e) =>
-            {
-                delayTimer.Stop();
-                delayTimer.Dispose();
-                ShowPreJumpAlert();
-            };
-            delayTimer.Start();
-        }
     }
 }

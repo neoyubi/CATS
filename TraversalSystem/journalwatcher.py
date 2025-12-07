@@ -1,14 +1,16 @@
 import json
+import time
 
 class JournalWatcher:
-    __slots__ = ["firstRun", "lastJournalText", "lastCarrierRequest", "hasJumped", "departureTime", "lastFuel", "lastUsedFileName"]
-    
+    __slots__ = ["firstRun", "startTime", "lastJournalText", "lastCarrierRequest", "hasJumped", "departureTime", "lastFuel", "lastUsedFileName"]
+
     def __init__(self) -> None:
         self.reset_all()
 
 
     def reset_all(self) -> None:
         self.firstRun = True
+        self.startTime = time.time()
         self.lastJournalText = ""
         self.lastCarrierRequest = ""
         self.hasJumped = False
@@ -43,15 +45,18 @@ class JournalWatcher:
 
                 elif event['event'] == "CarrierStats":
                     fuel = event['FuelLevel']
-                    print("Fuel: " + str(fuel)) 
+                    print("Fuel: " + str(fuel))
 
-                    if fuel < self.lastFuel and fuel < 100:
+                    seconds_since_start = time.time() - self.startTime
+                    if seconds_since_start > 30 and fuel < self.lastFuel and fuel < 100:
                         print("alert:Your Tritium is running low.")
 
                     self.lastFuel = fuel
                 elif event['event'] == "CarrierJump":
                     self.hasJumped = True
 
+            self.lastJournalText = journalText
+        if self.firstRun:
             self.lastJournalText = journalText
         self.firstRun = False
         return True

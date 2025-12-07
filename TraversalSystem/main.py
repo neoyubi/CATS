@@ -194,6 +194,38 @@ def move_to_game_coords(x: int, y: int):
     pyautogui.moveTo(abs_x, abs_y)
 
 
+def wait_for_proceed(timeout: int = 30) -> bool:
+    """Wait for C# to send 'proceed' signal via stdin. Returns True if received, False on timeout."""
+    import threading
+    import queue
+
+    result_queue = queue.Queue()
+
+    def read_stdin():
+        try:
+            while True:
+                line = sys.stdin.readline()
+                if not line:
+                    break
+                if line.strip().lower() == "proceed":
+                    result_queue.put(True)
+                    return
+        except Exception:
+            pass
+
+    reader_thread = threading.Thread(target=read_stdin, daemon=True)
+    reader_thread.start()
+
+    try:
+        result = result_queue.get(timeout=timeout)
+        if result:
+            return True
+    except queue.Empty:
+        pass
+
+    return False
+
+
 journal_watcher = JournalWatcher()
 discord_messenger = DiscordHandler()
 
@@ -589,6 +621,10 @@ def main_loop():
 
         line = a[i]
 
+        print(f"interaction:plotting:{line}")
+        sys.stdout.flush()
+        wait_for_proceed()
+
         print("Auto-refocus: Bringing Elite Dangerous to foreground before navigation...")
         focus_elite_window()
         time.sleep(3)
@@ -779,6 +815,11 @@ def main_loop():
                     case 100:
                         discord_messenger.update_fields(8, 9)
                     case 150:
+                        print("interaction:refueling")
+                        sys.stdout.flush()
+                        wait_for_proceed()
+                        focus_elite_window()
+                        time.sleep(1)
                         print("Restocking tritium...")
                         time.sleep(2)
                         th = threading.Thread(target=restock_tritium)

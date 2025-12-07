@@ -34,7 +34,7 @@ namespace MultiCarrierManager
 
             bool darkModeChanged = checkBoxDarkMode.Checked != Program.settings.DarkMode;
             Program.settings.SetDarkMode(checkBoxDarkMode.Checked);
-            Program.settings.SetPreJumpAlert(checkBoxPreJumpAlert.Checked);
+            Program.settings.SetPreInteractionAlert(checkBoxPreInteractionAlert.Checked);
 
             if (darkModeChanged)
             {
@@ -54,7 +54,8 @@ namespace MultiCarrierManager
             checkBox1.Checked = Program.settings.PowerSaving;
             comboBox1.SelectedIndex = Program.settings.RefuelMode;
             checkBoxDarkMode.Checked = Program.settings.DarkMode;
-            checkBoxPreJumpAlert.Checked = Program.settings.PreJumpAlert;
+            checkBoxPreInteractionAlert.Checked = Program.settings.PreInteractionAlert;
         }
+
     }
 }

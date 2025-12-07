@@ -41,7 +41,7 @@ namespace MultiCarrierManager
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.checkBoxDarkMode = new System.Windows.Forms.CheckBox();
-            this.checkBoxPreJumpAlert = new System.Windows.Forms.CheckBox();
+            this.checkBoxPreInteractionAlert = new System.Windows.Forms.CheckBox();
             this.labelAppearance = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -137,21 +137,21 @@ namespace MultiCarrierManager
             this.checkBoxDarkMode.Text = "Dark mode (requires restart)";
             this.checkBoxDarkMode.UseVisualStyleBackColor = true;
             //
-            // checkBoxPreJumpAlert
+            // checkBoxPreInteractionAlert
             //
-            this.checkBoxPreJumpAlert.Location = new System.Drawing.Point(12, 270);
-            this.checkBoxPreJumpAlert.Name = "checkBoxPreJumpAlert";
-            this.checkBoxPreJumpAlert.Size = new System.Drawing.Size(333, 24);
-            this.checkBoxPreJumpAlert.TabIndex = 11;
-            this.checkBoxPreJumpAlert.Text = "Alert 1 minute before jump (Windows notification)";
-            this.checkBoxPreJumpAlert.UseVisualStyleBackColor = true;
+            this.checkBoxPreInteractionAlert.Location = new System.Drawing.Point(12, 270);
+            this.checkBoxPreInteractionAlert.Name = "checkBoxPreInteractionAlert";
+            this.checkBoxPreInteractionAlert.Size = new System.Drawing.Size(333, 24);
+            this.checkBoxPreInteractionAlert.TabIndex = 11;
+            this.checkBoxPreInteractionAlert.Text = "Alert before plotting/refueling";
+            this.checkBoxPreInteractionAlert.UseVisualStyleBackColor = true;
             //
             // OptionsForm
             //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(368, 350);
-            this.Controls.Add(this.checkBoxPreJumpAlert);
+            this.Controls.Add(this.checkBoxPreInteractionAlert);
             this.Controls.Add(this.checkBoxDarkMode);
             this.Controls.Add(this.labelAppearance);
             this.Controls.Add(this.label1);
@@ -183,7 +183,7 @@ namespace MultiCarrierManager
         private System.Windows.Forms.CheckBox checkBox3;
         private System.Windows.Forms.CheckBox checkBox4;
         private System.Windows.Forms.CheckBox checkBoxDarkMode;
-        private System.Windows.Forms.CheckBox checkBoxPreJumpAlert;
+        private System.Windows.Forms.CheckBox checkBoxPreInteractionAlert;
         private System.Windows.Forms.Label labelAppearance;
 
         #endregion

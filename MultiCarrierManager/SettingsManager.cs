@@ -16,7 +16,7 @@ namespace MultiCarrierManager
         public int RefuelMode { get; private set; }
         public bool SingleDiscordMessage { get; private set; }
         public bool DarkMode { get; private set; }
-        public bool PreJumpAlert { get; private set; }
+        public bool PreInteractionAlert { get; private set; }
 
         public SettingsManager(string file)
         {
@@ -24,7 +24,7 @@ namespace MultiCarrierManager
             IniFile = File.ReadAllLines(file);
 
             DarkMode = true;
-            PreJumpAlert = true;
+            PreInteractionAlert = true;
 
             foreach (string line in IniFile)
             {
@@ -60,9 +60,9 @@ namespace MultiCarrierManager
                 {
                     DarkMode = Convert.ToBoolean(line.Split('=')[1]);
                 }
-                else if (line.StartsWith("pre-jump-alert"))
+                else if (line.StartsWith("pre-interaction-alert"))
                 {
-                    PreJumpAlert = Convert.ToBoolean(line.Split('=')[1]);
+                    PreInteractionAlert = Convert.ToBoolean(line.Split('=')[1]);
                 }
             }
         }
@@ -149,10 +149,10 @@ namespace MultiCarrierManager
             ReplaceInArray("dark-mode", b);
         }
 
-        public void SetPreJumpAlert(bool b)
+        public void SetPreInteractionAlert(bool b)
         {
-            PreJumpAlert = b;
-            ReplaceInArray("pre-jump-alert", b);
+            PreInteractionAlert = b;
+            ReplaceInArray("pre-interaction-alert", b);
         }
     }
 }
