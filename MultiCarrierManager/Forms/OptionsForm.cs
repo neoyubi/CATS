@@ -30,8 +30,16 @@ namespace MultiCarrierManager
             else Program.settings.SetGetTritium(checkBox4.Checked);
 
             Program.settings.SetDisableRefuel(checkBox5.Checked);
-            
             Program.settings.SetRefuelMode(comboBox1.SelectedIndex);
+
+            bool darkModeChanged = checkBoxDarkMode.Checked != Program.settings.DarkMode;
+            Program.settings.SetDarkMode(checkBoxDarkMode.Checked);
+            Program.settings.SetPreJumpAlert(checkBoxPreJumpAlert.Checked);
+
+            if (darkModeChanged)
+            {
+                MessageBox.Show("Please restart CATS for the theme change to take effect.", "Theme Changed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
 
             Close();
         }
@@ -44,8 +52,9 @@ namespace MultiCarrierManager
             checkBox4.Checked = Program.settings.GetTritium;
             checkBox5.Checked = Program.settings.DisableRefuel;
             checkBox1.Checked = Program.settings.PowerSaving;
-            
             comboBox1.SelectedIndex = Program.settings.RefuelMode;
+            checkBoxDarkMode.Checked = Program.settings.DarkMode;
+            checkBoxPreJumpAlert.Checked = Program.settings.PreJumpAlert;
         }
     }
 }
