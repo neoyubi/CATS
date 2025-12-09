@@ -201,6 +201,9 @@ namespace MultiCarrierManager.CATS
                         form.UpdateStatusIndicator(StatusIndicator.StatusState.Plotting, $"Next: {nextSystem}");
                         SetNavigationState($"Plotting to {nextSystem}", true);
                         break;
+                    case "Beginning navigation.":
+                        StartFocusMonitoring();
+                        break;
                     case string s when s.StartsWith("Navigation complete"):
                         form.Text = $"CATS | En route to {finalSystem} | Next stop: {nextSystem} | Counting down...";
                         form.UpdateStatusIndicator(StatusIndicator.StatusState.Waiting, $"Waiting for jump to {nextSystem}");

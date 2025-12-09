@@ -43,6 +43,10 @@ namespace MultiCarrierManager
             this.checkBoxDarkMode = new System.Windows.Forms.CheckBox();
             this.checkBoxPreInteractionAlert = new System.Windows.Forms.CheckBox();
             this.labelAppearance = new System.Windows.Forms.Label();
+            this.labelRefuelThreshold = new System.Windows.Forms.Label();
+            this.trackBarRefuelThreshold = new System.Windows.Forms.TrackBar();
+            this.labelRefuelThresholdValue = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarRefuelThreshold)).BeginInit();
             this.SuspendLayout();
             // 
             // checkBox2
@@ -82,38 +86,67 @@ namespace MultiCarrierManager
             this.button1.Text = "Save";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
+            //
             // checkBox5
-            // 
+            //
             this.checkBox5.Location = new System.Drawing.Point(12, 102);
             this.checkBox5.Name = "checkBox5";
             this.checkBox5.Size = new System.Drawing.Size(333, 24);
             this.checkBox5.TabIndex = 5;
             this.checkBox5.Text = "Disable automatic refuel";
             this.checkBox5.UseVisualStyleBackColor = true;
-            // 
+            this.checkBox5.CheckedChanged += new System.EventHandler(this.checkBox5_CheckedChanged);
+            //
+            // labelRefuelThreshold
+            //
+            this.labelRefuelThreshold.Location = new System.Drawing.Point(12, 129);
+            this.labelRefuelThreshold.Name = "labelRefuelThreshold";
+            this.labelRefuelThreshold.Size = new System.Drawing.Size(200, 17);
+            this.labelRefuelThreshold.TabIndex = 13;
+            this.labelRefuelThreshold.Text = "Refuel when tritium below:";
+            //
+            // trackBarRefuelThreshold
+            //
+            this.trackBarRefuelThreshold.Location = new System.Drawing.Point(12, 146);
+            this.trackBarRefuelThreshold.Maximum = 1000;
+            this.trackBarRefuelThreshold.Minimum = 50;
+            this.trackBarRefuelThreshold.Name = "trackBarRefuelThreshold";
+            this.trackBarRefuelThreshold.Size = new System.Drawing.Size(280, 45);
+            this.trackBarRefuelThreshold.TabIndex = 14;
+            this.trackBarRefuelThreshold.TickFrequency = 100;
+            this.trackBarRefuelThreshold.Value = 200;
+            this.trackBarRefuelThreshold.Scroll += new System.EventHandler(this.trackBarRefuelThreshold_Scroll);
+            //
+            // labelRefuelThresholdValue
+            //
+            this.labelRefuelThresholdValue.Location = new System.Drawing.Point(298, 150);
+            this.labelRefuelThresholdValue.Name = "labelRefuelThresholdValue";
+            this.labelRefuelThresholdValue.Size = new System.Drawing.Size(50, 17);
+            this.labelRefuelThresholdValue.TabIndex = 15;
+            this.labelRefuelThresholdValue.Text = "200";
+            //
             // checkBox1
-            // 
-            this.checkBox1.Location = new System.Drawing.Point(12, 132);
+            //
+            this.checkBox1.Location = new System.Drawing.Point(12, 191);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(333, 24);
             this.checkBox1.TabIndex = 6;
             this.checkBox1.Text = "Power saving mode";
             this.checkBox1.UseVisualStyleBackColor = true;
-            // 
+            //
             // comboBox1
-            // 
+            //
             this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Items.AddRange(new object[] { "Personal (First 8 items)", "Personal (After 8 items)", "Squadron" });
-            this.comboBox1.Location = new System.Drawing.Point(12, 188);
+            this.comboBox1.Location = new System.Drawing.Point(12, 247);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(344, 21);
             this.comboBox1.TabIndex = 7;
             //
             // label1
             //
-            this.label1.Location = new System.Drawing.Point(12, 168);
+            this.label1.Location = new System.Drawing.Point(12, 227);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(100, 17);
             this.label1.TabIndex = 8;
@@ -122,7 +155,7 @@ namespace MultiCarrierManager
             // labelAppearance
             //
             this.labelAppearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelAppearance.Location = new System.Drawing.Point(12, 220);
+            this.labelAppearance.Location = new System.Drawing.Point(12, 280);
             this.labelAppearance.Name = "labelAppearance";
             this.labelAppearance.Size = new System.Drawing.Size(150, 17);
             this.labelAppearance.TabIndex = 9;
@@ -130,7 +163,7 @@ namespace MultiCarrierManager
             //
             // checkBoxDarkMode
             //
-            this.checkBoxDarkMode.Location = new System.Drawing.Point(12, 240);
+            this.checkBoxDarkMode.Location = new System.Drawing.Point(12, 300);
             this.checkBoxDarkMode.Name = "checkBoxDarkMode";
             this.checkBoxDarkMode.Size = new System.Drawing.Size(333, 24);
             this.checkBoxDarkMode.TabIndex = 10;
@@ -139,18 +172,25 @@ namespace MultiCarrierManager
             //
             // checkBoxPreInteractionAlert
             //
-            this.checkBoxPreInteractionAlert.Location = new System.Drawing.Point(12, 270);
+            this.checkBoxPreInteractionAlert.Location = new System.Drawing.Point(12, 330);
             this.checkBoxPreInteractionAlert.Name = "checkBoxPreInteractionAlert";
             this.checkBoxPreInteractionAlert.Size = new System.Drawing.Size(333, 24);
             this.checkBoxPreInteractionAlert.TabIndex = 11;
             this.checkBoxPreInteractionAlert.Text = "Alert before plotting/refueling";
             this.checkBoxPreInteractionAlert.UseVisualStyleBackColor = true;
             //
+            // button1
+            //
+            this.button1.Location = new System.Drawing.Point(12, 365);
+            //
             // OptionsForm
             //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(368, 350);
+            this.ClientSize = new System.Drawing.Size(368, 420);
+            this.Controls.Add(this.labelRefuelThresholdValue);
+            this.Controls.Add(this.trackBarRefuelThreshold);
+            this.Controls.Add(this.labelRefuelThreshold);
             this.Controls.Add(this.checkBoxPreInteractionAlert);
             this.Controls.Add(this.checkBoxDarkMode);
             this.Controls.Add(this.labelAppearance);
@@ -166,7 +206,9 @@ namespace MultiCarrierManager
             this.Name = "OptionsForm";
             this.Text = "Options";
             this.Load += new System.EventHandler(this.OptionsForm_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarRefuelThreshold)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
         }
 
         private System.Windows.Forms.Label label1;
@@ -185,6 +227,9 @@ namespace MultiCarrierManager
         private System.Windows.Forms.CheckBox checkBoxDarkMode;
         private System.Windows.Forms.CheckBox checkBoxPreInteractionAlert;
         private System.Windows.Forms.Label labelAppearance;
+        private System.Windows.Forms.Label labelRefuelThreshold;
+        private System.Windows.Forms.TrackBar trackBarRefuelThreshold;
+        private System.Windows.Forms.Label labelRefuelThresholdValue;
 
         #endregion
     }

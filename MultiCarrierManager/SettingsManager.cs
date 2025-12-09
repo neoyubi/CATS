@@ -17,6 +17,7 @@ namespace MultiCarrierManager
         public bool SingleDiscordMessage { get; private set; }
         public bool DarkMode { get; private set; }
         public bool PreInteractionAlert { get; private set; }
+        public int RefuelThreshold { get; private set; }
 
         public SettingsManager(string file)
         {
@@ -25,6 +26,7 @@ namespace MultiCarrierManager
 
             DarkMode = true;
             PreInteractionAlert = true;
+            RefuelThreshold = 200;
 
             foreach (string line in IniFile)
             {
@@ -63,6 +65,10 @@ namespace MultiCarrierManager
                 else if (line.StartsWith("pre-interaction-alert"))
                 {
                     PreInteractionAlert = Convert.ToBoolean(line.Split('=')[1]);
+                }
+                else if (line.StartsWith("refuel-threshold"))
+                {
+                    RefuelThreshold = Convert.ToInt32(line.Split('=')[1]);
                 }
             }
         }
@@ -153,6 +159,12 @@ namespace MultiCarrierManager
         {
             PreInteractionAlert = b;
             ReplaceInArray("pre-interaction-alert", b);
+        }
+
+        public void SetRefuelThreshold(int i)
+        {
+            RefuelThreshold = i;
+            ReplaceInArray("refuel-threshold", i);
         }
     }
 }

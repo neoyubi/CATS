@@ -4,7 +4,7 @@
 #include "CodeDependencies.iss"
 
 #define MyAppName "CATS"
-#define MyAppVersion "4.0.2"
+#define MyAppVersion "4.0.3"
 #define MyAppPublisher "mck"
 #define MyAppExeName "CATS.exe"
 

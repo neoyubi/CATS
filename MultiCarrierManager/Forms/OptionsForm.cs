@@ -31,6 +31,7 @@ namespace MultiCarrierManager
 
             Program.settings.SetDisableRefuel(checkBox5.Checked);
             Program.settings.SetRefuelMode(comboBox1.SelectedIndex);
+            Program.settings.SetRefuelThreshold(trackBarRefuelThreshold.Value);
 
             bool darkModeChanged = checkBoxDarkMode.Checked != Program.settings.DarkMode;
             Program.settings.SetDarkMode(checkBoxDarkMode.Checked);
@@ -55,7 +56,27 @@ namespace MultiCarrierManager
             comboBox1.SelectedIndex = Program.settings.RefuelMode;
             checkBoxDarkMode.Checked = Program.settings.DarkMode;
             checkBoxPreInteractionAlert.Checked = Program.settings.PreInteractionAlert;
+            trackBarRefuelThreshold.Value = Program.settings.RefuelThreshold;
+            labelRefuelThresholdValue.Text = Program.settings.RefuelThreshold.ToString();
+            UpdateRefuelThresholdEnabled();
         }
 
+        private void checkBox5_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateRefuelThresholdEnabled();
+        }
+
+        private void trackBarRefuelThreshold_Scroll(object sender, EventArgs e)
+        {
+            labelRefuelThresholdValue.Text = trackBarRefuelThreshold.Value.ToString();
+        }
+
+        private void UpdateRefuelThresholdEnabled()
+        {
+            bool enabled = !checkBox5.Checked;
+            trackBarRefuelThreshold.Enabled = enabled;
+            labelRefuelThreshold.Enabled = enabled;
+            labelRefuelThresholdValue.Enabled = enabled;
+        }
     }
 }

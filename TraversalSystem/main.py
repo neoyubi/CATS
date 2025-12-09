@@ -70,6 +70,9 @@ power_saving = False
 global refuel_mode
 refuel_mode = 0
 
+global refuel_threshold
+refuel_threshold = 200
+
 global target_monitor
 target_monitor = 0
 
@@ -319,6 +322,7 @@ def load_settings():
     global disable_refuel
     global power_saving
     global refuel_mode
+    global refuel_threshold
     # AFAIK, it is impossible to launch the script without either settings file existing
 
     # Get settings from settings.txt
@@ -375,6 +379,10 @@ def load_settings():
             if line.startswith("refuel-mode"):
                 print(line)
                 refuel_mode = int(line.split("=")[1].strip())
+
+            if line.startswith("refuel-threshold"):
+                print(line)
+                refuel_threshold = int(line.split("=")[1].strip())
     except Exception as e:
         print("There seems to be a problem with your settings.ini file. Please confirm that your options are properly selected.")
         print(e)
@@ -897,8 +905,8 @@ def main_loop():
                         discord_messenger.update_fields(8, 9)
                     case 150:
                         current_fuel = journal_watcher.get_fuel_level()
-                        if current_fuel < 500:
-                            print(f"Fuel level {current_fuel} below threshold, initiating refuel...")
+                        if current_fuel < refuel_threshold:
+                            print(f"Fuel level {current_fuel} below threshold ({refuel_threshold}), initiating refuel...")
                             print("interaction:refueling")
                             sys.stdout.flush()
                             wait_for_proceed()
@@ -908,7 +916,7 @@ def main_loop():
                             th = threading.Thread(target=restock_tritium)
                             th.start()
                         else:
-                            print(f"Fuel level {current_fuel} sufficient, skipping refuel")
+                            print(f"Fuel level {current_fuel} above threshold ({refuel_threshold}), skipping refuel")
 
                 time.sleep(1)
                 totalTime -= 1
